@@ -1,21 +1,24 @@
 package com.globant.paulabaudo.madlibs;
 
+
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.app.Fragment;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
-import java.util.ArrayList;
 
-
-public class MainActivity extends ActionBarActivity {
+/**
+ * A simple {@link Fragment} subclass.
+ */
+public class BlankFragment extends Fragment {
 
     EditText mRelativeText;
     EditText mAdjectiveText;
@@ -29,28 +32,43 @@ public class MainActivity extends ActionBarActivity {
     EditText mNameText;
     Boolean[] mStates;
     Button mShowmeButton;
+    final static String FIELD = "FIELD";
+
+    public BlankFragment() {
+        // Required empty public constructor
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_main, container, false);
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         init();
+
+        if (savedInstanceState != null){
+            if (savedInstanceState.getBoolean(FIELD + "Name")){
+                mNameText.setText("A");
+            }
+        }
     }
 
     private void init(){
         mStates = new Boolean[]{false,false,false,false,false,false,false,false,false,false};
-        mRelativeText = (EditText) findViewById(R.id.edit_text_relative);
-        mAdjectiveText = (EditText) findViewById(R.id.edit_text_adjective);
-        mAdjectiveText2 = (EditText) findViewById(R.id.edit_text_adjective_2);
-        mNameRoomText = (EditText) findViewById(R.id.edit_text_name_room);
-        mAdjectiveText3 = (EditText) findViewById(R.id.edit_text_adjective_3);
-        mVerbEdText = (EditText) findViewById(R.id.edit_text_verb_ed);
-        mBodyText = (EditText) findViewById(R.id.edit_text_body);
-        mVerbIngText = (EditText) findViewById(R.id.edit_text_verb_ing);
-        mRelativeText2 = (EditText) findViewById(R.id.edit_text_relative_2);
-        mNameText = (EditText) findViewById(R.id.edit_text_name);
-        mShowmeButton = (Button) findViewById(R.id.button_showme);
+        mRelativeText = (EditText) getView().findViewById(R.id.edit_text_relative);
+        mAdjectiveText = (EditText) getView().findViewById(R.id.edit_text_adjective);
+        mAdjectiveText2 = (EditText) getView().findViewById(R.id.edit_text_adjective_2);
+        mNameRoomText = (EditText) getView().findViewById(R.id.edit_text_name_room);
+        mAdjectiveText3 = (EditText) getView().findViewById(R.id.edit_text_adjective_3);
+        mVerbEdText = (EditText) getView().findViewById(R.id.edit_text_verb_ed);
+        mBodyText = (EditText) getView().findViewById(R.id.edit_text_body);
+        mVerbIngText = (EditText) getView().findViewById(R.id.edit_text_verb_ing);
+        mRelativeText2 = (EditText) getView().findViewById(R.id.edit_text_relative_2);
+        mNameText = (EditText) getView().findViewById(R.id.edit_text_name);
+        mShowmeButton = (Button) getView().findViewById(R.id.button_showme);
 
         addTextWatchers();
         prepareButton();
@@ -60,7 +78,7 @@ public class MainActivity extends ActionBarActivity {
         mShowmeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+                Intent intent = new Intent(getActivity(),ResultActivity.class);
 
                 intent.putExtra("relative",mRelativeText.getText().toString());
                 intent.putExtra("adjective",mAdjectiveText.getText().toString());
@@ -314,24 +332,8 @@ public class MainActivity extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(FIELD + "Name", mNameText.getText().toString().equals("S"));
     }
 }
